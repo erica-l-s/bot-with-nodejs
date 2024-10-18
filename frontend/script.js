@@ -1,3 +1,5 @@
+const API_URL = 'https://www.yourfirm.de/suche/all/?fulltext={}&sort=Datum&page={}';
+
 async function buscarVagas() {
     const keywords = document.getElementById('keyword').value.split(',').map(word => word.trim());
     if (keywords.length === 0 || keywords[0] === '') {
@@ -7,7 +9,7 @@ async function buscarVagas() {
 
     document.getElementById('status').innerText = 'Searching vacancies, bitte warten...';
     try {
-        const response = await fetch('http://localhost:3000/buscar-vagas', {
+        const response = await fetch(`${API_URL}/buscar-vagas`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ keywords })
@@ -29,7 +31,7 @@ async function buscarVagas() {
 async function baixarArquivo() {
     const filename = document.getElementById('filename').value || 'vagas';
     try {
-        const response = await fetch(`http://localhost:3000/baixar-vagas?filename=${encodeURIComponent(filename)}`);
+        const response = await fetch(`${API_URL}/baixar-vagas?filename=${encodeURIComponent(filename)}`);
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
