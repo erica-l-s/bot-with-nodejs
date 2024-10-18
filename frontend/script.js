@@ -1,5 +1,24 @@
 const API_URL = 'https://www.yourfirm.de/suche/all/?fulltext={}&sort=Datum&page={}';
 
+
+async function baixarArquivo() {
+    const filename = document.getElementById('filename').value || 'vagas';
+    try {
+        const response = await fetch(`${API_URL}/baixar-vagas?filename=${encodeURIComponent(filename)}`);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${filename}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error('Error to download file:', error);
+    }
+}
+
 async function buscarVagas() {
     const keywords = document.getElementById('keyword').value.split(',').map(word => word.trim());
     if (keywords.length === 0 || keywords[0] === '') {
@@ -8,6 +27,8 @@ async function buscarVagas() {
     }
 
     document.getElementById('status').innerText = 'Searching vacancies, bitte warten...';
+    document.getElementById('status').classList.remove('success-message', 'error-message');
+
     try {
         const response = await fetch(`${API_URL}/buscar-vagas`, {
             method: 'POST',
@@ -15,15 +36,15 @@ async function buscarVagas() {
             body: JSON.stringify({ keywords })
         });
         if (!response.ok) {
-            throw new Error('Error to search vacancies');
+            throw new Error('Erro ao buscar vagas');
         }
         const result = await response.json();
         document.getElementById('status').innerText = `Successful! Were found ${result.count} vacancies.`;
-        document.getElementById('status').style.color = 'green';
+        document.getElementById('status').classList.add('success-message');
         document.getElementById('download').style.display = 'block';
     } catch (error) {
         document.getElementById('status').innerText = 'Error to search vacancies.';
-        document.getElementById('status').style.color = 'red';
+        document.getElementById('status').classList.add('error-message');
         console.error('Erro:', error);
     }
 }

@@ -1,9 +1,8 @@
 const express = require('express');
 const axios = require('axios');
 const cheerio = require('cheerio');
-const fs = require('fs');
-const xlsx = require('xlsx');
 const cors = require('cors');
+const xlsx = require('xlsx');
 const path = require('path');
 
 const app = express();
@@ -16,12 +15,12 @@ const headers = {
 
 let dados_vagas = [];
 
-app.use(cors()); // Adicionando middleware CORS
+app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../frontend'))); // Para servir o frontend estático
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 app.post('/buscar-vagas', async (req, res) => {
-    const { keywords } = req.body; // Esperando um array de palavras-chave
+    const { keywords } = req.body;
     dados_vagas = [];
     
     for (const keyword of keywords) {
@@ -79,7 +78,7 @@ app.get('/baixar-vagas', (req, res) => {
         if (err) {
             console.error('Erro ao baixar arquivo:', err);
         }
-        fs.unlinkSync(filePath); // Deleta o arquivo após o download
+        fs.unlinkSync(filePath);
     });
 });
 
