@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: meu-projeto-backend
+    env: node
+    buildCommand: cd backend && yarn install
+    startCommand: yarn start
