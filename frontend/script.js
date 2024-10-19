@@ -8,7 +8,6 @@ async function buscarVagas() {
     }
 
     document.getElementById('status').innerText = 'Searching vacancies, bitte warten...';
-    document.getElementById('status').classList.remove('success-message', 'error-message');
 
     try {
         const response = await fetch(`${API_URL}/buscar-vagas`, {
@@ -17,12 +16,18 @@ async function buscarVagas() {
             body: JSON.stringify({ keywords })
         });
         if (!response.ok) {
-            throw new Error('Erro ao buscar vagas');
+            throw new Error('Error to search vacancies');
         }
         const result = await response.json();
-        document.getElementById('status').innerText = `Successful! Were found ${result.count} vacancies.`;
-        document.getElementById('status').style.color = 'green';
-        document.getElementById('download').style.display = 'block';
+
+        if (result.count === 0) {
+            document.getElementById('status').innerText = 'No vacancies found for the given keywords.';
+            document.getElementById('status').style.color = 'red';
+        } else {
+            document.getElementById('status').innerText = `Successful! ${result.count} vacancies found.`;
+            document.getElementById('status').style.color = 'green';
+            document.getElementById('download').style.display = 'block';
+        }
     } catch (error) {
         document.getElementById('status').innerText = 'Error to search vacancies.';
         document.getElementById('status').style.color = 'red';
