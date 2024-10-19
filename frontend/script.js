@@ -1,7 +1,7 @@
-const API_URL = 'https://www.yourfirm.de/suche/all/?fulltext={}&sort=Datum&page={}';
+const API_URL = 'https://bot-with-nodejs.onrender.com';
 
 
-async function baixarArquivo() {
+async function baixarArquivo(base_url) {
     const filename = document.getElementById('filename').value || 'vagas';
     try {
         const response = await fetch(`${API_URL}/baixar-vagas?filename=${encodeURIComponent(filename)}`);
@@ -40,11 +40,11 @@ async function buscarVagas() {
         }
         const result = await response.json();
         document.getElementById('status').innerText = `Successful! Were found ${result.count} vacancies.`;
-        document.getElementById('status').classList.add('success-message');
+        document.getElementById('status').style.color = 'green';
         document.getElementById('download').style.display = 'block';
     } catch (error) {
         document.getElementById('status').innerText = 'Error to search vacancies.';
-        document.getElementById('status').classList.add('error-message');
+        document.getElementById('status').style.color = 'red';
         console.error('Erro:', error);
     }
 }
