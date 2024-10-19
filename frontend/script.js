@@ -1,24 +1,5 @@
 const API_URL = 'https://bot-with-nodejs.onrender.com';
 
-
-async function baixarArquivo(base_url) {
-    const filename = document.getElementById('filename').value || 'vagas';
-    try {
-        const response = await fetch(`${API_URL}/baixar-vagas?filename=${encodeURIComponent(filename)}`);
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${filename}.xlsx`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-    } catch (error) {
-        console.error('Error to download file:', error);
-    }
-}
-
 async function buscarVagas() {
     const keywords = document.getElementById('keyword').value.split(',').map(word => word.trim());
     if (keywords.length === 0 || keywords[0] === '') {
