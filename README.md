@@ -45,7 +45,6 @@ This project is a web application that allows users to search for job vacancies 
    ```bash
    npm install
 
-
 The server will run on ``` http://localhost:3000.```
 
 Link: https://bot-with-nodejs.onrender.com
