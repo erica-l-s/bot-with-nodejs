@@ -32,18 +32,17 @@ app.post('/buscar-vagas', async (req, res) => {
             try {
                 const response = await axios.get(url, { headers });
                 const $ = cheerio.load(response.data);
-                const vagas = $('div.sc-b2039713-27');
+                const vagas =  $('[data-testid=qa-hitzone]').parent();
 
                 if (vagas.length === 0) {
                     break;
                 }
 
                 vagas.each((_, vaga) => {
-                    const titulo = $(vaga).find('h2.sc-b2039713-22').text().trim() || 'Título não encontrado';
-                    const local = $(vaga).find('div.sc-b2039713-16').text().trim() || 'Local não encontrado';
-                    const empresa = $(vaga).find('p.sc-b2039713-8').text().trim() || 'Empresa não encontrada';
-                    const data = $(vaga).find('p.sc-b2039713-10').text().trim() || 'Data não encontrada';
-                    const link = $(vaga).find('a').attr('href') || 'Link não encontrado';
+                    const titulo = $(vaga).find('a').attr('title') || 'Título não encontrado';
+                    const local = $(vaga).find('[data-icon="location-dot"]').parent().find('span').text().trim() || 'Local não encontrado';
+                    const empresa = $(vaga).find('p:first').text().trim() || 'Empresa não encontrada';
+                    const link = `https://www.yourfirm.de${$(vaga).find('a').attr('href')}` || 'Link não encontrado';
 
                     if (titulo.toLowerCase().includes(keyword.toLowerCase())) {
                         dados_vagas.push({
@@ -51,7 +50,6 @@ app.post('/buscar-vagas', async (req, res) => {
                             'Title': titulo,
                             'Location': local,
                             'Company': empresa,
-                            'Date': data,
                             'Link': `https://www.yourfirm.de${link}`
                         });
                     }
